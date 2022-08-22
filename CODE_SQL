@@ -1,0 +1,69 @@
+##course data obtained from the open source Chinook Database erd can be accessed here: https://ucde-rey.s3.amazonaws.com/DSV1015/ChinookDatabaseSchema.png 
+
+1. Using a subquery, find the names of all the tracks for the album "Californication".
+
+select Name, AlbumId from Tracks
+where AlbumId in (select AlbumId from Albums where Title = "Californication";
+
+2. Find the total number of invoices for each customer along with the customer's full name, city and email.
+
+select a.FirstName,a.LastName,a.City,a.Email,count(a.InvoiceId) as TotalNum
+from
+(select Customers.FirstName,Customers.LastName,Customers.City,
+Customers.Email,Invoices.InvoiceId
+from Customers
+left join Invoices
+on Customers.CustomerId=Invoices.CustomerId) as a
+group by a.FirstName
+having a.FirstName="František";
+
+3. Retrieve the track name, album, artistID, and trackID for all the albums.
+
+select Tracks.Name, Tracks.Trackid, Albums.Title, Albums.Albumid from Tracks
+inner join Albums on Tracks.Albumid=Albums.Albumid;
+
+4. Retrieve a list with the managers last name, and the last name of the employees who report to him or her.
+
+select a.LastName as EmployeeLastname,a.ReportsTo,b.LastName as ManagerLastname
+from Employees as a
+left join Employees as b
+on a.ReportsTo=b.EmployeeId;
+
+5. Find the name and ID of the artists who do not have albums. 
+
+select a.Artistid, al.Albumid, a.Name 
+from (Artists a left join Albums al on a.Artistid= al.Artistid)
+where al.Albumid is null;
+
+6.Use a UNION to create a list of all the employee's and customer's first names and last names ordered by the last name in descending order.
+
+select FirstName, LastName from Employees union
+select FirstName,LastName from Customers
+order by LastName desc
+
+7. See if there are any customers who have a different city listed in their billing city versus their customer city.
+
+select Customers.FirstName,Customers.City,Invoices.BillingCity
+from Customers
+left join Invoices
+on Customers.CustomerId=Invoices.CustomerId
+where Customers.City<>Invoices.BillingCity
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
